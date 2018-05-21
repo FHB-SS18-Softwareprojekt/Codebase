@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>520</x>
+      <y>370</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>TextParser</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>830</x>
+      <y>340</y>
+      <w>220</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>Summarizer
+--
+int:maxLength
+--
+summarize(File:text, Enum:type)
+summarize(String:text)
+setMaxLength(int:maxLength)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>250</x>
+      <y>350</y>
+      <w>180</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>Implements:
+PDFBox, POI &amp; 
+evtl. HTML-Parser</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>370</y>
+      <w>120</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>610</x>
+      <y>360</y>
+      <w>240</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+provides text for &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;220.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>700</x>
+      <y>100</y>
+      <w>100</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>GUI</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>220</x>
+      <y>250</y>
+      <w>930</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>Summarizer</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>740</x>
+      <y>160</y>
+      <w>160</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>140.0;180.0;140.0;70.0;10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>830</x>
+      <y>470</y>
+      <w>220</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Enum={PDF,OFFICE(,HTML)}
+
+string method for copy-pasted text</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>940</x>
+      <y>430</y>
+      <w>30</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>430</x>
+      <y>480</y>
+      <w>280</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>ConfigLink
+--
+getStopWords(Enum:lang)
+getKeyWords()
+addKeyWord(String:keyword)
+deleteKeyWord(String:keyword)
+editKeyWord(String:newKey, String:oldKey)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>560</x>
+      <y>410</y>
+      <w>290</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>provides words for &gt;
+lt=-
+m1=1
+m2=1
+
+</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0;270.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>230</x>
+      <y>500</y>
+      <w>130</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>Enum={de,en,...}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>350</x>
+      <y>520</y>
+      <w>100</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>
