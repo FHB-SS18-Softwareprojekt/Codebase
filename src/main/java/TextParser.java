@@ -56,4 +56,9 @@ public class TextParser {
         for (String s : this.config.getStopwords(this.locale))
             words.remove(s.toLowerCase());
     }
+
+    public void removeStopWords(Collection<String> words) {
+        for (String s : this.config.getStopwords(this.locale))
+            words.remove(s.toLowerCase());
+    }
 }
