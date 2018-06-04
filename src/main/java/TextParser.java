@@ -16,7 +16,6 @@ public class TextParser {
     }
 
     public List<String> getKeywords(String text) {
-        text = this.removePunctations(text);
         Map<String, Integer> words = this.splitAndCountWords(text);
         this.removeStopWords(words);
 
@@ -34,9 +33,15 @@ public class TextParser {
         return list;
     }
 
+    public String[] splitWords(String text)
+    {
+        text = this.removePunctations(text);
+        return text.toLowerCase().split(" ");
+    }
+
     private Map<String, Integer> splitAndCountWords(String text) {
         Map<String, Integer> map = new HashMap<>();
-        String[] words = text.toLowerCase().split(" ");
+        String[] words = this.splitWords(text);
         for (String word : words) {
             if (map.containsKey(word))
                 map.put(word, map.get(word) + 1);

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 class TextParser_Test {
@@ -15,6 +16,8 @@ class TextParser_Test {
     private static List<String> keywordsList;
     private static String sentenceText;
     private static List<String> sentenceList;
+    private static String splitText;
+    private static String[] splitArray;
 
     @BeforeAll
     static void initAll() {
@@ -29,6 +32,9 @@ class TextParser_Test {
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat?",
                 "Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!!",
                 "Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!");
+
+        splitText = "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.";
+        splitArray = new String[]{"lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipisici", "elit", "sed", "eiusmod", "tempor", "incidunt", "ut", "labore", "et", "dolore", "magna", "aliqua"};
     }
 
     @Test
@@ -39,5 +45,10 @@ class TextParser_Test {
     @Test
     void test_getSentences() {
         assertIterableEquals(textParser.getSentences(sentenceText), sentenceList);
+    }
+
+    @Test
+    void test_splitWords() {
+        assertArrayEquals(textParser.splitWords(splitText), splitArray);
     }
 }
