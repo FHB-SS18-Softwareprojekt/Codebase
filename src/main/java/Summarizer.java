@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.*;
 
 public class Summarizer {
@@ -18,7 +19,7 @@ public class Summarizer {
         ArrayList<String> sortedSentences = new ArrayList<>(sentences);
         sortedSentences.sort((s1, s2) -> Float.compare(scoredSentences.get(s1), scoredSentences.get(s2)));
 
-        int sentenceCount = Math.max(1, (int)(amount*sortedSentences.size()));
+        int sentenceCount = Math.max(1, (int) (amount * sortedSentences.size()));
 
         return sortedSentences.subList(0, sentenceCount);
     }
@@ -45,7 +46,8 @@ public class Summarizer {
     private float getKeywordWeight(String[] sentenceWords, Map<String, Integer> keywords) {
         float weight = 0;
         for (String word : sentenceWords)
-            weight += keywords.get(word);
+            if (keywords.containsKey(word))
+                weight += keywords.get(word);
         return weight / sentenceWords.length;
     }
 
@@ -57,4 +59,31 @@ public class Summarizer {
         return count / titleWords.size();
     }
 
+
+    public static void main(String[] args) {
+        ConfigLink config = new ConfigLink(new File("./src/main/resources/config"));
+        TextParser textParser = new TextParser(Locale.ENGLISH, config);
+        Summarizer summarizer = new Summarizer(textParser);
+
+        final String text = "Computer science is the study of the theory, experimentation, and engineering that form the basis for the design and use of computers. It is the scientific and practical approach to computation and its applications and the systematic study of the feasibility, structure, expression, and mechanization of the methodical procedures (or algorithms) that underlie the acquisition, representation, processing, storage, communication of, and access to, information. An alternate, more succinct definition of computer science is the study of automating algorithmic processes that scale. A computer scientist specializes in the theory of computation and the design of computational systems.[1] See glossary of computer science.\n" +
+                "\n" +
+                "Its fields can be divided into a variety of theoretical and practical disciplines. Some fields, such as computational complexity theory (which explores the fundamental properties of computational and intractable problems), are highly abstract, while fields such as computer graphics emphasize real-world visual applications. Other fields still focus on challenges in implementing computation. For example, programming language theory considers various approaches to the description of computation, while the study of computer programming itself investigates various aspects of the use of programming language and complex systems. Human–computer interaction considers the challenges in making computers and computations useful, usable, and universally accessible to humans.";
+
+        System.out.println("100% Summary");
+        List<String> summarized = summarizer.summarize(text, "Computer Science!", 1f);
+        for (String sentence : summarized)
+            System.out.println(" - " + sentence);
+
+
+        System.out.println("50% Summary");
+        summarized = summarizer.summarize(text, "Computer Science!", .5f);
+        for (String sentence : summarized)
+            System.out.println(" - " + sentence);
+
+
+        System.out.println("20% Summary");
+        summarized = summarizer.summarize(text, "Computer Science!", .2f);
+        for (String sentence : summarized)
+            System.out.println(" - " + sentence);
+    }
 }
