@@ -26,7 +26,7 @@ public class WordDocReader implements IDocumentReader {
         try(FileInputStream inputStream = new FileInputStream(file.getAbsolutePath());
             HWPFDocument document = new HWPFDocument(inputStream);
             WordExtractor wordExtractor = new WordExtractor(document)) {
-                return wordExtractor.getText();
+                return wordExtractor.getText().trim();
         }
     }
 
@@ -34,7 +34,7 @@ public class WordDocReader implements IDocumentReader {
         try(FileInputStream inputStream = new FileInputStream(file.getAbsolutePath());
             XWPFDocument document = new XWPFDocument(inputStream);
             XWPFWordExtractor wordExtractor = new XWPFWordExtractor(document)) {
-            return wordExtractor.getText();
+            return wordExtractor.getText().trim();
         }
     }
 
