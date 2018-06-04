@@ -1,6 +1,11 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextParser {
+
+    private final static String REGEX_PUNCTUATION = "([^ A-Za-z0-9])";
+    private final static Pattern REGEX_SENTENCE_END = Pattern.compile("(.*?[.?!][ \n\r\0])");
 
     private final Locale locale;
     private final ConfigLink config;
@@ -20,6 +25,15 @@ public class TextParser {
         return keywords;
     }
 
+    public List<String> getSentences(String text) {
+        List<String> list = new ArrayList<>();
+        //Adding a linebreak to the end to allow detecting last sentence
+        Matcher matcher = REGEX_SENTENCE_END.matcher(text+"\n");
+        while(matcher.find())
+            list.add(matcher.group().trim());
+        return list;
+    }
+
     private Map<String, Integer> splitAndCountWords(String text) {
         Map<String, Integer> map = new HashMap<>();
         String[] words = text.toLowerCase().split(" ");
@@ -33,7 +47,7 @@ public class TextParser {
     }
 
     private String removePunctations(String text) {
-        return text.replaceAll("([^ A-Za-z0-9])", "");
+        return text.replaceAll(REGEX_PUNCTUATION, "");
     }
 
     private void removeStopWords(Map<String, Integer> words) {
