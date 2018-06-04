@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class WordDocReader_Test {
 
     private WordDocReader wordReader;
-    private File docFile, docxFile, noExtension, unknownExtension;
+    private File docFile, docxFile, noExtension, unknownExtension, helloDoc, helloDocx;
 
 
     @BeforeEach
@@ -19,6 +19,8 @@ class WordDocReader_Test {
         docxFile = new File("./src/test/resources/word/test.docx");
         noExtension =  new File("./src/test/resources/word");
         unknownExtension = new File("./src/test/resources/word/test.dat");
+        helloDoc = new File("./src/test/resources/word/Hello.doc");
+        helloDocx = new File("./src/test/resources/word/Hello.docx");
     }
 
     @Test
@@ -28,6 +30,12 @@ class WordDocReader_Test {
         assertThrows(IllegalArgumentException.class, () -> wordReader.readDocument(unknownExtension));
         assertThrows(IOException.class, () -> wordReader.readDocument(docFile));
         assertThrows(IOException.class, () -> wordReader.readDocument(docxFile));
+        try {
+            assertTrue("Hello World".equals(wordReader.readDocument(helloDoc)));
+            assertTrue("Hello World".equals(wordReader.readDocument(helloDocx)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -35,6 +43,12 @@ class WordDocReader_Test {
         assertThrows(NullPointerException.class, () -> wordReader.readDocFile(null));
         assertThrows(IOException.class, () -> wordReader.readDocFile(docFile));
         assertThrows(IOException.class, () -> wordReader.readDocFile(docxFile));
+        assertThrows(IllegalArgumentException.class, () -> wordReader.readDocFile(helloDocx));
+        try {
+            assertTrue("Hello World".equals(wordReader.readDocFile(helloDoc)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -42,5 +56,11 @@ class WordDocReader_Test {
         assertThrows(NullPointerException.class, () -> wordReader.readDocxFile(null));
         assertThrows(IOException.class, () -> wordReader.readDocxFile(docFile));
         assertThrows(IOException.class, () -> wordReader.readDocxFile(docxFile));
+        assertThrows(IllegalArgumentException.class, () -> wordReader.readDocxFile(helloDoc));
+        try {
+            assertTrue("Hello World".equals(wordReader.readDocxFile(helloDocx)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
