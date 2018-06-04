@@ -36,6 +36,15 @@ public class TextParser {
         return text.toLowerCase().split(" ");
     }
 
+    public Set<String> splitTitle(String title)
+    {
+        title = this.removePunctations(title);
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, title.toLowerCase().split(" "));
+        removeStopWords(set);
+        return set;
+    }
+
     private Map<String, Integer> splitAndCountWords(String text) {
         Map<String, Integer> map = new HashMap<>();
         String[] words = this.splitWords(text);

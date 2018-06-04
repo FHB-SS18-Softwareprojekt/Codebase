@@ -15,6 +15,8 @@ class TextParser_Test {
     private static List<String> sentenceList;
     private static String splitText;
     private static String[] splitArray;
+    private static String titleText;
+    private static Set<String> titleSet;
     private static List<String> stopwords;
     private static List<String> stopwordsFiltered;
 
@@ -35,7 +37,8 @@ class TextParser_Test {
         keywordsMap.put("a", 1);
 
         sentenceText = "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat? Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!! Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!";
-        sentenceList = Arrays.asList("Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.",
+        sentenceList = new ArrayList<>();
+        Collections.addAll(sentenceList, "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.",
                 "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat?",
                 "Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!!",
                 "Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!");
@@ -43,8 +46,14 @@ class TextParser_Test {
         splitText = "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.";
         splitArray = new String[]{"lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipisici", "elit", "sed", "eiusmod", "tempor", "incidunt", "ut", "labore", "et", "dolore", "magna", "aliqua"};
 
-        stopwords = Arrays.asList("Remove", "or", "and", "words");
-        stopwords = Arrays.asList("Remove", "words");
+        titleText = "Test-Title; or how to properly Unit-test";
+        titleSet = new HashSet<>();
+        Collections.addAll(titleSet, "testtitle", "how", "to", "properly", "unittest");
+
+        stopwords = new ArrayList<>();
+        Collections.addAll(stopwords, "Remove", "or", "and", "words");
+        stopwordsFiltered = new ArrayList<>();
+        Collections.addAll(stopwordsFiltered, "Remove", "words");
     }
 
     @Test
@@ -62,6 +71,11 @@ class TextParser_Test {
     @Test
     void test_splitWords() {
         assertArrayEquals(textParser.splitWords(splitText), splitArray);
+    }
+
+    @Test
+    void test_splitTitle() {
+        assertIterableEquals(textParser.splitTitle(titleText), titleSet);
     }
 
     @Test
