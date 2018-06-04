@@ -15,13 +15,10 @@ public class TextParser {
         this.config = _config;
     }
 
-    public List<String> getKeywords(String text) {
+    public Map<String, Integer> getKeywords(String text) {
         Map<String, Integer> words = this.splitAndCountWords(text);
         this.removeStopWords(words);
-
-        List<String> keywords = new ArrayList<>(words.keySet());
-        keywords.sort((s1, s2) -> -Integer.compare(words.get(s1), words.get(s2)));
-        return keywords;
+        return words;
     }
 
     public List<String> getSentences(String text) {
