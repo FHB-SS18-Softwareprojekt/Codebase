@@ -31,8 +31,8 @@ class WordDocReader_Test {
         assertThrows(IOException.class, () -> wordReader.readDocument(docFile));
         assertThrows(IOException.class, () -> wordReader.readDocument(docxFile));
         try {
-            assertTrue("Hello World".equals(wordReader.readDocument(helloDoc)));
-            assertTrue("Hello World".equals(wordReader.readDocument(helloDocx)));
+            assertEquals("Hello World", wordReader.readDocument(helloDoc));
+            assertEquals("Hello World", wordReader.readDocument(helloDocx));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ class WordDocReader_Test {
         assertThrows(IOException.class, () -> wordReader.readDocFile(docxFile));
         assertThrows(IllegalArgumentException.class, () -> wordReader.readDocFile(helloDocx));
         try {
-            assertTrue("Hello World".equals(wordReader.readDocFile(helloDoc)));
+            assertEquals("Hello World", wordReader.readDocFile(helloDoc));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,7 +58,7 @@ class WordDocReader_Test {
         assertThrows(IOException.class, () -> wordReader.readDocxFile(docxFile));
         assertThrows(IllegalArgumentException.class, () -> wordReader.readDocxFile(helloDoc));
         try {
-            assertTrue("Hello World".equals(wordReader.readDocxFile(helloDocx)));
+            assertEquals("Hello World", wordReader.readDocxFile(helloDocx));
         } catch (IOException e) {
             e.printStackTrace();
         }
