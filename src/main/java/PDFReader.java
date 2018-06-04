@@ -22,7 +22,7 @@ public class PDFReader {
         String OS =System.getProperty("os.name");
 
         if(OS.substring(0,5).equals("Linux")){
-            file=new File("/usr/share/fonts/truetype/abyssinica/AbyssinicaSIL_R.ttf");
+            file=new File("/usr/share/fonts/truetype/abyssinica/AbyssinicaSIL-R.ttf");
         }
         else if(OS.substring(0,7).equals("Windows")){
             file=new File("C:/Windows/Fonts/Arial.ttf");
@@ -39,7 +39,21 @@ public class PDFReader {
         contentStream.setFont(PDType0Font.load(document, file), 12);
         contentStream.newLineAtOffset(25, 750);
         contentStream.setLeading(14.5f);
-        for(int i=65; i<text.length();i=i+65) {
+        for(int i=65; i<text.length();i=i+65)
+        {
+            if(line>50) {
+                line=0;
+                contentStream.endText();
+                contentStream.close();
+                PDPage newPage=new PDPage();
+                document.addPage(newPage);
+
+                contentStream = new PDPageContentStream(document, newPage);
+                contentStream.beginText();
+                contentStream.setFont(PDType0Font.load(document, file), 12);
+                contentStream.newLineAtOffset(25, 750);
+                contentStream.setLeading(14.5f);
+            }
             contentStream.showText(text.substring(start, i));
             contentStream.newLine();
             line++;
