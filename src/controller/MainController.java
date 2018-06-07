@@ -3,18 +3,19 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+/**
+ *
+ * @author Andre Matutat
+ * Erstellt die GUI mithilfe der summarizerMain.fxml
+ */
 public class MainController extends Application {
-	static Stage ps;
 	public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage primaryStage){
-    	ps=primaryStage;
         FXMLLoader loader =new FXMLLoader();
         loader.setLocation(getClass().getResource("summarizerMain.fxml"));
         try {
