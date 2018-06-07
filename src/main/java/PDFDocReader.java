@@ -5,7 +5,8 @@ import org.apache.pdfbox.text.PDFTextStripper;
 
 public class PDFDocReader implements IDocumentReader {
     @Override
-    public String readDocument(File file) throws IOException {
+    public String readDocument(String path) throws IOException {
+        File file = new File(path);
         try (PDDocument document = PDDocument.load(file)) {
             // Create TextStripper
             PDFTextStripper pdfStripper = new PDFTextStripper();

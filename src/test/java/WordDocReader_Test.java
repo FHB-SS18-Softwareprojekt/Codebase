@@ -9,30 +9,36 @@ import static org.junit.jupiter.api.Assertions.*;
 class WordDocReader_Test {
 
     private WordDocReader wordReader;
-    private File docFile, docxFile, noExtension, unknownExtension, helloDoc, helloDocx;
+    private File docFile, docxFile, helloDoc, helloDocx;
+    private String docPath, docxPath, noExtensionPath, unknownExtensionPath, helloDocPath, helloDocxPath;
 
 
     @BeforeEach
     void initEach() {
         wordReader = new WordDocReader();
-        docFile = new File("./src/test/resources/word/test.doc");
-        docxFile = new File("./src/test/resources/word/test.docx");
-        noExtension =  new File("./src/test/resources/word");
-        unknownExtension = new File("./src/test/resources/word/test.dat");
-        helloDoc = new File("./src/test/resources/word/Hello.doc");
-        helloDocx = new File("./src/test/resources/word/Hello.docx");
+        docPath = "./src/test/resources/word/test.doc";
+        docxPath = "./src/test/resources/word/test.docx";
+        noExtensionPath = "./src/test/resources/word";
+        unknownExtensionPath = "./src/test/resources/word/test.dat";
+        helloDocPath = "./src/test/resources/word/Hello.doc";
+        helloDocxPath = "./src/test/resources/word/Hello.docx";
+
+        docFile = new File(docPath);
+        docxFile = new File(docxPath);
+        helloDoc = new File(helloDocPath);
+        helloDocx = new File(helloDocxPath);
     }
 
     @Test
     void readDocument() {
         assertThrows(NullPointerException.class, () -> wordReader.readDocument(null));
-        assertThrows(IllegalArgumentException.class, () -> wordReader.readDocument(noExtension));
-        assertThrows(IllegalArgumentException.class, () -> wordReader.readDocument(unknownExtension));
-        assertThrows(IOException.class, () -> wordReader.readDocument(docFile));
-        assertThrows(IOException.class, () -> wordReader.readDocument(docxFile));
+        assertThrows(IllegalArgumentException.class, () -> wordReader.readDocument(noExtensionPath));
+        assertThrows(IllegalArgumentException.class, () -> wordReader.readDocument(unknownExtensionPath));
+        assertThrows(IOException.class, () -> wordReader.readDocument(docPath));
+        assertThrows(IOException.class, () -> wordReader.readDocument(docxPath));
         try {
-            assertEquals("Hello World", wordReader.readDocument(helloDoc));
-            assertEquals("Hello World", wordReader.readDocument(helloDocx));
+            assertEquals("Hello World", wordReader.readDocument(helloDocPath));
+            assertEquals("Hello World", wordReader.readDocument(helloDocxPath));
         } catch (IOException e) {
             e.printStackTrace();
         }

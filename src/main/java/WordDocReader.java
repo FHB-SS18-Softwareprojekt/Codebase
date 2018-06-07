@@ -11,7 +11,8 @@ import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 public class WordDocReader implements IDocumentReader {
 
     @Override
-    public String readDocument(File file) throws IOException {
+    public String readDocument(String path) throws IOException {
+        File file = new File(path);
         String fileExtension = FilenameUtils.getExtension(file.getName());
         if (fileExtension.equalsIgnoreCase("doc")) {
             return readDocFile(file);
