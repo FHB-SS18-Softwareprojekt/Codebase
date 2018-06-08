@@ -20,7 +20,10 @@ public class MainController extends Application {
         loader.setLocation(getClass().getResource("summarizerMain.fxml"));
         try {
         	Scene scene = new Scene (loader.load());
+        	primaryStage.setMinHeight(550);
+			primaryStage.setMinWidth(640);
 			primaryStage.setScene(scene);
+
 		} catch (IOException e) {
 
 			e.printStackTrace();
