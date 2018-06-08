@@ -18,6 +18,11 @@
                   <MenuItem fx:id="importButton" accelerator="Shortcut+O" mnemonicParsing="false" onAction="#importText" text="Importieren" />
                   <MenuItem fx:id="exportButton" accelerator="Shortcut+S" mnemonicParsing="false" onAction="#exportText" text="Speichern unter" />
                </items></Menu>
+            <Menu mnemonicParsing="true" text="_Extras">
+              <items>
+                <MenuItem fx:id="helpButton"  accelerator="Shortcut+I" mnemonicParsing="false" onAction="#showHelp" text="Hilfe" />
+              </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

@@ -6,7 +6,9 @@ import java.io.File;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
@@ -17,8 +19,10 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.Mnemonic;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 /**
  * Actionevents der SummerizerGUI
  * @author Andre Matutat
@@ -31,6 +35,9 @@ public class SummarizerGUIController {
 
     @FXML
     private MenuItem exportButton;
+
+    @FXML
+    private MenuItem helpButton;
 
     @FXML
     private Text sliderText;
@@ -81,6 +88,22 @@ public class SummarizerGUIController {
 	    }
 
 
+	    @FXML
+	    private void showHelp(ActionEvent event) {
+	 	      Label secondLabel = new Label("Hier steht eine tolle Anleitung");
+              StackPane secondaryLayout = new StackPane();
+              secondaryLayout.getChildren().add(secondLabel);
+              Scene secondScene = new Scene(secondaryLayout, 230, 100);
+              Stage newWindow = new Stage();
+              newWindow.setTitle("Hilfe");
+              newWindow.setScene(secondScene);
+
+
+
+
+            newWindow.show();
+
+	    }
 	    private String getText(String s){
 	    	return s+"yay";
 	    }
