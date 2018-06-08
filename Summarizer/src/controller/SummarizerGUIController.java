@@ -60,8 +60,7 @@ public class SummarizerGUIController {
 	    }
 
 	    private int getSliderValue(){
-	    	double rv= 0.3+0.4*slider.getValue()/100;
-	    	rv=rv*100;
+	    	double rv= 30+0.4*slider.getValue();
 	    	return  (int) rv;
 	    }
 
@@ -97,11 +96,7 @@ public class SummarizerGUIController {
               Stage newWindow = new Stage();
               newWindow.setTitle("Hilfe");
               newWindow.setScene(secondScene);
-
-
-
-
-            newWindow.show();
+              newWindow.show();
 
 	    }
 	    private String getText(String s){
