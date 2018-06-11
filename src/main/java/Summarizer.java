@@ -27,17 +27,20 @@ public class Summarizer {
     private final static float PRIO_KEYWORD = 2.0f;
     private final static float PRIO_TITLE = 1.5f;
     private final static float PRIO_LENGTH = 0.75f;
+    private final static float PRIO_POS = 1f;
 
     private HashMap<String, Float> computeSentenceScores(List<String> sentences, Map<String, Integer> keywords, Set<String> titleWords) {
         HashMap<String, Float> map = new HashMap<>();
 
-        for (int iSentence = 0; iSentence < sentences.size(); iSentence++) {
+        int sentenceCount = sentences.size();
+        for (int iSentence = 0; iSentence < sentenceCount; iSentence++) {
             String sentence = sentences.get(iSentence);
             String[] words = this.parser.splitWords(sentence);
 
             float weight = PRIO_KEYWORD * getKeywordWeight(words, keywords);
             weight += PRIO_TITLE * getTitleWeight(words, titleWords);
             weight += PRIO_LENGTH * words.length;
+            weight += PRIO_POS * getSentencePriority(iSentence, sentenceCount);
             map.put(sentence, weight);
         }
         return map;
@@ -57,6 +60,39 @@ public class Summarizer {
             if (titleWords.contains(word))
                 count++;
         return count / titleWords.size();
+    }
+
+    /**
+     * Based on a research paper by
+     *
+     * See page 4 in this document:
+     * https://www.researchgate.net/publication/237252504_Sentence_Extraction_Based_Single_Document_Summarization
+     *
+     * @return a percentual float number representing the importance of the sentence based on its position
+     */
+    private float getSentencePriority(int position, int sentenceCount)
+    {
+        float relativePosition = position/(float)sentenceCount;
+        if(relativePosition<.1f)
+            return 0.17f;
+        else if(relativePosition<.2f)
+            return 0.23f;
+        else if(relativePosition<.3f)
+            return 0.14f;
+        else if(relativePosition<.4f)
+            return 0.08f;
+        else if(relativePosition<.5f)
+            return 0.05f;
+        else if(relativePosition<.6f)
+            return 0.04f;
+        else if(relativePosition<.7f)
+            return 0.06f;
+        else if(relativePosition<.8f)
+            return 0.04f;
+        else if(relativePosition<.9f)
+            return 0.04f;
+        else
+            return 0.15f;
     }
 
 
