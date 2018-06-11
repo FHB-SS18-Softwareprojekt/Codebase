@@ -1,4 +1,6 @@
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.util.*;
 
 public class Summarizer {
@@ -25,9 +27,9 @@ public class Summarizer {
     }
 
     private final static float PRIO_KEYWORD = 2.0f;
-    private final static float PRIO_TITLE = 1.5f;
-    private final static float PRIO_LENGTH = 0.75f;
-    private final static float PRIO_POS = 1f;
+    private final static float PRIO_TITLE = 1.25f;
+    private final static float PRIO_LENGTH = 0.5f;
+    private final static float PRIO_POS = 1.5f;
 
     private HashMap<String, Float> computeSentenceScores(List<String> sentences, Map<String, Integer> keywords, Set<String> titleWords) {
         HashMap<String, Float> map = new HashMap<>();
@@ -64,32 +66,31 @@ public class Summarizer {
 
     /**
      * Based on a research paper by
-     *
+     * <p>
      * See page 4 in this document:
      * https://www.researchgate.net/publication/237252504_Sentence_Extraction_Based_Single_Document_Summarization
      *
      * @return a percentual float number representing the importance of the sentence based on its position
      */
-    private float getSentencePriority(int position, int sentenceCount)
-    {
-        float relativePosition = position/(float)sentenceCount;
-        if(relativePosition<.1f)
+    private float getSentencePriority(int position, int sentenceCount) {
+        float relativePosition = position / (float) sentenceCount;
+        if (relativePosition < .1f)
             return 0.17f;
-        else if(relativePosition<.2f)
+        else if (relativePosition < .2f)
             return 0.23f;
-        else if(relativePosition<.3f)
+        else if (relativePosition < .3f)
             return 0.14f;
-        else if(relativePosition<.4f)
+        else if (relativePosition < .4f)
             return 0.08f;
-        else if(relativePosition<.5f)
+        else if (relativePosition < .5f)
             return 0.05f;
-        else if(relativePosition<.6f)
+        else if (relativePosition < .6f)
             return 0.04f;
-        else if(relativePosition<.7f)
+        else if (relativePosition < .7f)
             return 0.06f;
-        else if(relativePosition<.8f)
+        else if (relativePosition < .8f)
             return 0.04f;
-        else if(relativePosition<.9f)
+        else if (relativePosition < .9f)
             return 0.04f;
         else
             return 0.15f;
@@ -101,25 +102,36 @@ public class Summarizer {
         TextParser textParser = new TextParser(Locale.ENGLISH, config);
         Summarizer summarizer = new Summarizer(textParser);
 
-        final String text = "Computer science is the study of the theory, experimentation, and engineering that form the basis for the design and use of computers. It is the scientific and practical approach to computation and its applications and the systematic study of the feasibility, structure, expression, and mechanization of the methodical procedures (or algorithms) that underlie the acquisition, representation, processing, storage, communication of, and access to, information. An alternate, more succinct definition of computer science is the study of automating algorithmic processes that scale. A computer scientist specializes in the theory of computation and the design of computational systems.[1] See glossary of computer science.\n" +
-                "\n" +
-                "Its fields can be divided into a variety of theoretical and practical disciplines. Some fields, such as computational complexity theory (which explores the fundamental properties of computational and intractable problems), are highly abstract, while fields such as computer graphics emphasize real-world visual applications. Other fields still focus on challenges in implementing computation. For example, programming language theory considers various approaches to the description of computation, while the study of computer programming itself investigates various aspects of the use of programming language and complex systems. Human–computer interaction considers the challenges in making computers and computations useful, usable, and universally accessible to humans.";
+        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("100% Summary");
-        List<String> summarized = summarizer.summarize(text, "Computer Science!", 1f);
-        for (String sentence : summarized)
-            System.out.println(" - " + sentence);
+        System.out.println("Pfad zu Datei eingeben:");
+        String path = scanner.nextLine();
+        if (path.isEmpty() || !path.endsWith(".txt"))
+            System.out.println("Pfad unzulässig");
 
+        File file = new File(path);
 
-        System.out.println("50% Summary");
-        summarized = summarizer.summarize(text, "Computer Science!", .5f);
-        for (String sentence : summarized)
-            System.out.println(" - " + sentence);
+        if (file.exists() && file.isFile()) {
+            System.out.println("Zusammenfassungs-Größe angeben (Wert zwischen 30 und 80)");
+            int quota = scanner.nextInt();
+            float f_quota = quota / 100f;
 
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(file));
 
-        System.out.println("20% Summary");
-        summarized = summarizer.summarize(text, "Computer Science!", .2f);
-        for (String sentence : summarized)
-            System.out.println(" - " + sentence);
+                String title = reader.readLine();
+                String line;
+                StringBuilder text = new StringBuilder();
+                while ((line = reader.readLine()) != null)
+                    text.append(line).append("\n");
+
+                System.out.println(quota + "% Zusammenfassung:");
+                List<String> summarized = summarizer.summarize(text.toString(), title, f_quota);
+                for (String sentence : summarized)
+                    System.out.println(" - " + sentence);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
