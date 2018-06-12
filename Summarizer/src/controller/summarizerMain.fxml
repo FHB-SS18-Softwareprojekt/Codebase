@@ -55,7 +55,7 @@
          <top>
             <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <top>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Orginal" wrappingWidth="60.994140625" BorderPane.alignment="CENTER" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Original" wrappingWidth="60.994140625" BorderPane.alignment="CENTER" />
                </top>
                <center>
                   <TextArea fx:id="longTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
