@@ -1,6 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 public class Summarizer {
@@ -13,7 +11,9 @@ public class Summarizer {
 
     public List<Sentence> summarize(String text, String title, float amount) {
         Map<String, Integer> keywords = this.parser.getKeywords(text);
-        Set<String> titleWords = this.parser.splitTitle(title);
+        Set<String> titleWords = null;
+        if(title!=null){
+            titleWords = this.parser.splitTitle(title);}
         List<Sentence> sentences = this.parser.getSentences(text);
 
         computeSentenceScores(sentences, keywords, titleWords);
@@ -41,7 +41,8 @@ public class Summarizer {
             String[] words = this.parser.splitWords(sentenceText);
 
             float weight = PRIO_KEYWORD * getKeywordWeight(words, keywords);
-            weight += PRIO_TITLE * getTitleWeight(words, titleWords);
+            if(titleWords!=null){
+                weight += PRIO_TITLE * getTitleWeight(words, titleWords);}
             weight += PRIO_LENGTH * words.length;
             weight += PRIO_POS * getSentencePriority(iSentence, sentenceCount);
             sentence.setSentenceScore(weight);
@@ -97,6 +98,15 @@ public class Summarizer {
             return 0.15f;
     }
 
+    public List<Sentence> summarizeFromPath(String path, float quota) throws IOException {
+
+        float f_quota = quota / 100f;
+        String[] parsed = parser.getTextFromPath(path);
+        //TODO parsed kann beim Einlesen von PDF offenbar leer sein, überprüfen
+        List<Sentence> summarized = summarize(parsed[1], parsed[0], f_quota);
+        summarized.sort(Comparator.comparingInt(Sentence::getPosition));
+        return summarized;
+    }
 
     public static void main(String[] args) {
         ConfigLink config = new ConfigLink(new File("./src/main/resources/config"));
@@ -107,7 +117,7 @@ public class Summarizer {
 
         System.out.println("Pfad zu Datei eingeben:");
         String path = scanner.nextLine();
-        if (path.isEmpty() || !path.endsWith(".txt"))
+        if (path.isEmpty())
             System.out.println("Pfad unzulässig");
 
         File file = new File(path);
@@ -115,26 +125,18 @@ public class Summarizer {
         if (file.exists() && file.isFile()) {
             System.out.println("Zusammenfassungs-Größe angeben (Wert zwischen 30 und 80)");
             int quota = scanner.nextInt();
-            float f_quota = quota / 100f;
 
+            System.out.println(quota + "% Zusammenfassung:");
+
+            List<Sentence> summarized = null;
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-
-                String title = reader.readLine();
-                String line;
-                StringBuilder text = new StringBuilder();
-                while ((line = reader.readLine()) != null)
-                    text.append(line).append("\n");
-
-                System.out.println(quota + "% Zusammenfassung:");
-                List<Sentence> summarized = summarizer.summarize(text.toString(), title, f_quota);
-                summarized.sort(Comparator.comparingInt(Sentence::getPosition));
-
-                for (Sentence sentence : summarized)
-                    System.out.println(" - " + sentence.getText());
-            } catch (Exception e) {
+                summarized = summarizer.summarizeFromPath(file.getPath(),quota);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            for (Sentence sentence : summarized)
+                System.out.println(" - " + sentence.getText());
         }
     }
 }

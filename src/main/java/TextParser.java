@@ -1,4 +1,8 @@
+import org.apache.commons.logging.Log;
+
+import java.io.*;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -6,7 +10,7 @@ public class TextParser {
 
     private final static String REGEX_PUNCTUATION = "([^ A-Za-z0-9])";
     private final static Pattern REGEX_SENTENCE_END = Pattern.compile("(.*?[.?!][ \n\r\0])");
-
+    private static final Logger log = Logger.getLogger(TextParser.class.getName());
     private final Locale locale;
     private final ConfigLink config;
 
@@ -72,5 +76,39 @@ public class TextParser {
     public void removeStopWords(Collection<String> words) {
         for (String s : this.config.getStopwords(this.locale))
             words.remove(s.toLowerCase());
+    }
+
+    public String[] getTextFromPath(String path) throws IOException {
+        File file = new File(path);
+        BufferedReader reader;
+        try {
+            if (file.getPath().endsWith(".txt")) {
+                log.info("Found .txt");
+                reader = new BufferedReader(new FileReader(file));
+            } else if (file.getPath().endsWith(".pdf")) {
+                log.info("Found .pdf");
+                PDFDocReader pdfDocReader = new PDFDocReader();
+                String text = pdfDocReader.readDocument(file.getPath());
+                reader = new BufferedReader((new StringReader(text)));
+            } else if (file.getPath().endsWith(".doc")||file.getPath().endsWith(".docx")) {
+                log.info("Found .doc or docx");
+                WordDocReader wordDocReader = new WordDocReader();
+                String text = wordDocReader.readDocument(file.getPath());
+                reader = new BufferedReader((new StringReader(text)));
+            } else {
+                throw new IllegalArgumentException("Wrong/Unknown file extension. Currently supported: " +
+                        ".txt , .pdf , .doc & docx.");
+            }
+            String title = reader.readLine();
+            log.info(title);
+            String line;
+            StringBuilder text = new StringBuilder();
+            while ((line = reader.readLine()) != null)
+                text.append(line).append("\n");
+            String[] read={title,text.toString()};
+            return read;
+        }catch (Exception e) {
+            throw e;
+        }
     }
 }
