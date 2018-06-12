@@ -20,7 +20,7 @@
                </items></Menu>
             <Menu mnemonicParsing="true" text="_Extras">
               <items>
-                <MenuItem fx:id="helpButton"  accelerator="Shortcut+I" mnemonicParsing="false" onAction="#showHelp" text="Hilfe" />
+                <MenuItem fx:id="helpButton" accelerator="Shortcut+I" mnemonicParsing="false" onAction="#showHelp" text="Hilfe" />
               </items>
             </Menu>
         </menus>
@@ -58,7 +58,7 @@
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Original" wrappingWidth="60.994140625" BorderPane.alignment="CENTER" />
                </top>
                <center>
-                  <TextArea fx:id="longTextArea" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                  <TextArea fx:id="longTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
          </top>
@@ -70,7 +70,7 @@
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Gekürzt" wrappingWidth="57.927734375" BorderPane.alignment="CENTER" />
                      </top>
                      <center>
-                        <TextArea fx:id="shortTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                        <TextArea fx:id="shortTextArea" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" BorderPane.alignment="CENTER" />
                      </center>
                   </BorderPane>
                </top>

@@ -76,6 +76,10 @@ public class SummarizerGUIController {
 	    @FXML
 	    private  void importText(ActionEvent event) {
 	    	FileChooser fc= new FileChooser();
+	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF","*.pdf" ));
+	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("DOCX","*.docx" ));
+	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("DOC","*.doc" ));
+	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT","*.txt" ));
 	    	File f =fc.showOpenDialog(null);
 	    	if (f!=null)
 	    	shortTextArea.setText(f.getPath());
