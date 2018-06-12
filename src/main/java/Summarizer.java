@@ -11,15 +11,15 @@ public class Summarizer {
         this.parser = parser;
     }
 
-    public List<String> summarize(String text, String title, float amount) {
+    public List<Sentence> summarize(String text, String title, float amount) {
         Map<String, Integer> keywords = this.parser.getKeywords(text);
         Set<String> titleWords = this.parser.splitTitle(title);
-        List<String> sentences = this.parser.getSentences(text);
+        List<Sentence> sentences = this.parser.getSentences(text);
 
-        Map<String, Float> scoredSentences = computeSentenceScores(sentences, keywords, titleWords);
+        computeSentenceScores(sentences, keywords, titleWords);
 
-        ArrayList<String> sortedSentences = new ArrayList<>(sentences);
-        sortedSentences.sort((s1, s2) -> Float.compare(scoredSentences.get(s1), scoredSentences.get(s2)));
+        ArrayList<Sentence> sortedSentences = new ArrayList<>(sentences);
+        sortedSentences.sort((s1, s2) -> Float.compare(s1.getSentenceScore(), s2.getSentenceScore()));
 
         int sentenceCount = Math.max(1, (int) (amount * sortedSentences.size()));
 
@@ -31,21 +31,22 @@ public class Summarizer {
     private final static float PRIO_LENGTH = 0.5f;
     private final static float PRIO_POS = 1.5f;
 
-    private HashMap<String, Float> computeSentenceScores(List<String> sentences, Map<String, Integer> keywords, Set<String> titleWords) {
-        HashMap<String, Float> map = new HashMap<>();
+    private void computeSentenceScores(List<Sentence> sentences, Map<String, Integer> keywords, Set<String> titleWords) {
+        //HashMap<String, Float> map = new HashMap<>();
 
         int sentenceCount = sentences.size();
         for (int iSentence = 0; iSentence < sentenceCount; iSentence++) {
-            String sentence = sentences.get(iSentence);
-            String[] words = this.parser.splitWords(sentence);
+            Sentence sentence = sentences.get(iSentence);
+            String sentenceText = sentence.getText();
+            String[] words = this.parser.splitWords(sentenceText);
 
             float weight = PRIO_KEYWORD * getKeywordWeight(words, keywords);
             weight += PRIO_TITLE * getTitleWeight(words, titleWords);
             weight += PRIO_LENGTH * words.length;
             weight += PRIO_POS * getSentencePriority(iSentence, sentenceCount);
-            map.put(sentence, weight);
+            sentence.setSentenceScore(weight);
         }
-        return map;
+        //return map;
     }
 
     private float getKeywordWeight(String[] sentenceWords, Map<String, Integer> keywords) {
@@ -126,9 +127,11 @@ public class Summarizer {
                     text.append(line).append("\n");
 
                 System.out.println(quota + "% Zusammenfassung:");
-                List<String> summarized = summarizer.summarize(text.toString(), title, f_quota);
-                for (String sentence : summarized)
-                    System.out.println(" - " + sentence);
+                List<Sentence> summarized = summarizer.summarize(text.toString(), title, f_quota);
+                summarized.sort(Comparator.comparingInt(Sentence::getPosition));
+
+                for (Sentence sentence : summarized)
+                    System.out.println(" - " + sentence.getText());
             } catch (Exception e) {
                 e.printStackTrace();
             }

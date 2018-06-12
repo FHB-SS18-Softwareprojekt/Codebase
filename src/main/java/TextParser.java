@@ -21,12 +21,15 @@ public class TextParser {
         return words;
     }
 
-    public List<String> getSentences(String text) {
-        List<String> list = new ArrayList<>();
+    public List<Sentence> getSentences(String text) {
+        List<Sentence> list = new ArrayList<>();
         //Adding a linebreak to the end to allow detecting last sentence
         Matcher matcher = REGEX_SENTENCE_END.matcher(text+"\n");
-        while(matcher.find())
-            list.add(matcher.group().trim());
+        int position = 0;
+        while(matcher.find()){
+            list.add(new Sentence(matcher.group().trim(),position));
+            position++;
+        }
         return list;
     }
 
