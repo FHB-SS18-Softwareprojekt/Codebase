@@ -8,7 +8,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ConfigLink_Test {
+class ConfigLink_Test {
 
     private ConfigLink configLink;
     private Set<String> en_stopwords;

@@ -1,6 +1,11 @@
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TextParser {
+
+    private final static String REGEX_PUNCTUATION = "([^ A-Za-z0-9])";
+    private final static Pattern REGEX_SENTENCE_END = Pattern.compile("(.*?[.?!][ \n\r\0])");
 
     private final Locale locale;
     private final ConfigLink config;
@@ -10,19 +15,39 @@ public class TextParser {
         this.config = _config;
     }
 
-    public List<String> getKeywords(String text) {
-        text = this.removePunctations(text);
+    public Map<String, Integer> getKeywords(String text) {
         Map<String, Integer> words = this.splitAndCountWords(text);
         this.removeStopWords(words);
+        return words;
+    }
 
-        List<String> keywords = new ArrayList<>(words.keySet());
-        keywords.sort((s1, s2) -> -Integer.compare(words.get(s1), words.get(s2)));
-        return keywords;
+    public List<String> getSentences(String text) {
+        List<String> list = new ArrayList<>();
+        //Adding a linebreak to the end to allow detecting last sentence
+        Matcher matcher = REGEX_SENTENCE_END.matcher(text+"\n");
+        while(matcher.find())
+            list.add(matcher.group().trim());
+        return list;
+    }
+
+    public String[] splitWords(String text)
+    {
+        text = this.removePunctations(text);
+        return text.toLowerCase().split(" ");
+    }
+
+    public Set<String> splitTitle(String title)
+    {
+        title = this.removePunctations(title);
+        Set<String> set = new HashSet<>();
+        Collections.addAll(set, title.toLowerCase().split(" "));
+        removeStopWords(set);
+        return set;
     }
 
     private Map<String, Integer> splitAndCountWords(String text) {
         Map<String, Integer> map = new HashMap<>();
-        String[] words = text.toLowerCase().split(" ");
+        String[] words = this.splitWords(text);
         for (String word : words) {
             if (map.containsKey(word))
                 map.put(word, map.get(word) + 1);
@@ -33,10 +58,15 @@ public class TextParser {
     }
 
     private String removePunctations(String text) {
-        return text.replaceAll("([^ A-Za-z0-9])", "");
+        return text.replaceAll(REGEX_PUNCTUATION, "");
     }
 
     private void removeStopWords(Map<String, Integer> words) {
+        for (String s : this.config.getStopwords(this.locale))
+            words.remove(s.toLowerCase());
+    }
+
+    public void removeStopWords(Collection<String> words) {
         for (String s : this.config.getStopwords(this.locale))
             words.remove(s.toLowerCase());
     }
