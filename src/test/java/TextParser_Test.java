@@ -2,6 +2,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,7 +13,7 @@ class TextParser_Test {
     private static String keywordsText;
     private static HashMap<String, Integer> keywordsMap;
     private static String sentenceText;
-    private static List<String> sentenceList;
+    private static List<Sentence> sentenceList;
     private static String splitText;
     private static String[] splitArray;
     private static String titleText;
@@ -38,10 +39,10 @@ class TextParser_Test {
 
         sentenceText = "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat? Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!! Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!";
         sentenceList = new ArrayList<>();
-        Collections.addAll(sentenceList, "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.",
-                "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat?",
-                "Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!!",
-                "Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!");
+        Collections.addAll(sentenceList, new Sentence("Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.", 0),
+                new Sentence("Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat?", 1),
+                new Sentence("Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur!!", 2),
+                new Sentence("Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum!", 3));
 
         splitText = "Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua.";
         splitArray = new String[]{"lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipisici", "elit", "sed", "eiusmod", "tempor", "incidunt", "ut", "labore", "et", "dolore", "magna", "aliqua"};
@@ -65,7 +66,13 @@ class TextParser_Test {
 
     @Test
     void test_getSentences() {
-        assertIterableEquals(textParser.getSentences(sentenceText), sentenceList);
+        List<Sentence> sentenceTestList = textParser.getSentences(sentenceText);
+        assertEquals(sentenceList.size(), sentenceTestList.size());
+        for (int i = 0; i < sentenceTestList.size(); i++) {
+            assertEquals(sentenceTestList.get(i).getText(), sentenceList.get(i).getText());
+            assertEquals(sentenceTestList.get(i).getPosition(), sentenceList.get(i).getPosition());
+            assertEquals(sentenceTestList.get(i).getSentenceScore(), sentenceList.get(i).getSentenceScore());
+        }
     }
 
     @Test
@@ -82,5 +89,17 @@ class TextParser_Test {
     void test_removeStopWords() {
         textParser.removeStopWords(stopwords);
         assertIterableEquals(stopwords, stopwordsFiltered);
+    }
+
+    @Test
+    void test_getTextFromPath() {
+        try {
+            String[] text = textParser.getTextFromPath("./src/test/resources/pdf/HelloWorld.pdf");
+            assertEquals(text.length, 2);
+            assertEquals(text[0], "hello world");
+            assertEquals(text[1], "");
+        } catch (IOException exception) {
+            fail(exception);
+        }
     }
 }

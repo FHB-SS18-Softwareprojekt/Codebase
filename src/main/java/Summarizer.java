@@ -1,6 +1,5 @@
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 public class Summarizer {
@@ -11,41 +10,46 @@ public class Summarizer {
         this.parser = parser;
     }
 
-    public List<String> summarize(String text, String title, float amount) {
+    public List<Sentence> summarize(String text, String title, float amount) {
         Map<String, Integer> keywords = this.parser.getKeywords(text);
-        Set<String> titleWords = this.parser.splitTitle(title);
-        List<String> sentences = this.parser.getSentences(text);
+        Set<String> titleWords = null;
+        if (title != null) {
+            titleWords = this.parser.splitTitle(title);
+        }
+        List<Sentence> sentences = this.parser.getSentences(text);
 
-        Map<String, Float> scoredSentences = computeSentenceScores(sentences, keywords, titleWords);
+        computeSentenceScores(sentences, keywords, titleWords);
 
-        ArrayList<String> sortedSentences = new ArrayList<>(sentences);
-        sortedSentences.sort((s1, s2) -> Float.compare(scoredSentences.get(s1), scoredSentences.get(s2)));
+        List<Sentence> sortedSentences = new ArrayList<>(sentences);
+        sortedSentences.sort((s1, s2) -> -Float.compare(s1.getSentenceScore(), s2.getSentenceScore()));
 
         int sentenceCount = Math.max(1, (int) (amount * sortedSentences.size()));
 
-        return sortedSentences.subList(0, sentenceCount);
+        sortedSentences = sortedSentences.subList(0, sentenceCount);
+        sortedSentences.sort(Comparator.comparingInt(Sentence::getPosition));
+        return sortedSentences;
     }
 
     private final static float PRIO_KEYWORD = 2.0f;
     private final static float PRIO_TITLE = 1.25f;
     private final static float PRIO_LENGTH = 0.5f;
-    private final static float PRIO_POS = 1.5f;
+    private final static float PRIO_POS = 1.0f;
 
-    private HashMap<String, Float> computeSentenceScores(List<String> sentences, Map<String, Integer> keywords, Set<String> titleWords) {
-        HashMap<String, Float> map = new HashMap<>();
-
+    private void computeSentenceScores(List<Sentence> sentences, Map<String, Integer> keywords, Set<String> titleWords) {
         int sentenceCount = sentences.size();
         for (int iSentence = 0; iSentence < sentenceCount; iSentence++) {
-            String sentence = sentences.get(iSentence);
-            String[] words = this.parser.splitWords(sentence);
+            Sentence sentence = sentences.get(iSentence);
+            String sentenceText = sentence.getText();
+            String[] words = this.parser.splitWords(sentenceText);
 
             float weight = PRIO_KEYWORD * getKeywordWeight(words, keywords);
-            weight += PRIO_TITLE * getTitleWeight(words, titleWords);
+            if (titleWords != null) {
+                weight += PRIO_TITLE * getTitleWeight(words, titleWords);
+            }
             weight += PRIO_LENGTH * words.length;
             weight += PRIO_POS * getSentencePriority(iSentence, sentenceCount);
-            map.put(sentence, weight);
+            sentence.setSentenceScore(weight);
         }
-        return map;
     }
 
     private float getKeywordWeight(String[] sentenceWords, Map<String, Integer> keywords) {
@@ -96,6 +100,15 @@ public class Summarizer {
             return 0.15f;
     }
 
+    public List<Sentence> summarizeFromPath(String path, float quota) throws IOException {
+
+        float f_quota = quota / 100f;
+        String[] parsed = parser.getTextFromPath(path);
+        //TODO parsed kann beim Einlesen von PDF offenbar leer sein, überprüfen
+        List<Sentence> summarized = summarize(parsed[1], parsed[0], f_quota);
+        summarized.sort(Comparator.comparingInt(Sentence::getPosition));
+        return summarized;
+    }
 
     public static void main(String[] args) {
         ConfigLink config = new ConfigLink(new File("./src/main/resources/config"));
@@ -106,7 +119,7 @@ public class Summarizer {
 
         System.out.println("Pfad zu Datei eingeben:");
         String path = scanner.nextLine();
-        if (path.isEmpty() || !path.endsWith(".txt"))
+        if (path.isEmpty())
             System.out.println("Pfad unzulässig");
 
         File file = new File(path);
@@ -114,24 +127,18 @@ public class Summarizer {
         if (file.exists() && file.isFile()) {
             System.out.println("Zusammenfassungs-Größe angeben (Wert zwischen 30 und 80)");
             int quota = scanner.nextInt();
-            float f_quota = quota / 100f;
 
+            System.out.println(quota + "% Zusammenfassung:");
+
+            List<Sentence> summarized = null;
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(file));
-
-                String title = reader.readLine();
-                String line;
-                StringBuilder text = new StringBuilder();
-                while ((line = reader.readLine()) != null)
-                    text.append(line).append("\n");
-
-                System.out.println(quota + "% Zusammenfassung:");
-                List<String> summarized = summarizer.summarize(text.toString(), title, f_quota);
-                for (String sentence : summarized)
-                    System.out.println(" - " + sentence);
-            } catch (Exception e) {
+                summarized = summarizer.summarizeFromPath(file.getPath(), quota);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            for (Sentence sentence : summarized)
+                System.out.println(" - " + sentence.getText());
         }
     }
 }
