@@ -1,5 +1,3 @@
-import org.apache.commons.logging.Log;
-
 import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -28,23 +26,21 @@ public class TextParser {
     public List<Sentence> getSentences(String text) {
         List<Sentence> list = new ArrayList<>();
         //Adding a linebreak to the end to allow detecting last sentence
-        Matcher matcher = REGEX_SENTENCE_END.matcher(text+"\n");
+        Matcher matcher = REGEX_SENTENCE_END.matcher(text + "\n");
         int position = 0;
-        while(matcher.find()){
-            list.add(new Sentence(matcher.group().trim(),position));
+        while (matcher.find()) {
+            list.add(new Sentence(matcher.group().trim(), position));
             position++;
         }
         return list;
     }
 
-    public String[] splitWords(String text)
-    {
+    public String[] splitWords(String text) {
         text = this.removePunctations(text);
         return text.toLowerCase().split(" ");
     }
 
-    public Set<String> splitTitle(String title)
-    {
+    public Set<String> splitTitle(String title) {
         title = this.removePunctations(title);
         Set<String> set = new HashSet<>();
         Collections.addAll(set, title.toLowerCase().split(" "));
@@ -90,7 +86,7 @@ public class TextParser {
                 PDFDocReader pdfDocReader = new PDFDocReader();
                 String text = pdfDocReader.readDocument(file.getPath());
                 reader = new BufferedReader((new StringReader(text)));
-            } else if (file.getPath().endsWith(".doc")||file.getPath().endsWith(".docx")) {
+            } else if (file.getPath().endsWith(".doc") || file.getPath().endsWith(".docx")) {
                 log.info("Found .doc or docx");
                 WordDocReader wordDocReader = new WordDocReader();
                 String text = wordDocReader.readDocument(file.getPath());
@@ -105,9 +101,9 @@ public class TextParser {
             StringBuilder text = new StringBuilder();
             while ((line = reader.readLine()) != null)
                 text.append(line).append("\n");
-            String[] read={title,text.toString()};
+            String[] read = {title, text.toString()};
             return read;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
