@@ -9,17 +9,32 @@ public class TextParser {
     private final static String REGEX_PUNCTUATION = "([^ A-Za-z0-9])";
     private final static Pattern REGEX_SENTENCE_END = Pattern.compile("(.*?[.?!][ \n\r\0])");
     private static final Logger log = Logger.getLogger(TextParser.class.getName());
-    private final Locale locale;
     private final ConfigLink config;
 
     public TextParser(Locale _locale, ConfigLink _config) {
-        this.locale = _locale;
         this.config = _config;
     }
 
-    public Map<String, Integer> getKeywords(String text) {
+    public Locale identifyLangauge(String text) {
+        Map<String, Integer> words = splitAndCountWords(text);
+        int identifiedCount = 0;
+        Locale identifiedLanguage = null;
+        for (Locale locale : this.config.getSupportedLanguages()) {
+            int count = 0;
+            for (String word : this.config.getStopwords(locale)) {
+                count += words.get(word);
+            }
+            if (count > identifiedCount) {
+                identifiedCount = count;
+                identifiedLanguage = locale;
+            }
+        }
+        return identifiedLanguage;
+    }
+
+    public Map<String, Integer> getKeywords(String text, Locale locale) {
         Map<String, Integer> words = this.splitAndCountWords(text);
-        this.removeStopWords(words);
+        this.removeStopWords(words, locale);
         return words;
     }
 
@@ -40,11 +55,11 @@ public class TextParser {
         return text.toLowerCase().split(" ");
     }
 
-    public Set<String> splitTitle(String title) {
+    public Set<String> splitTitle(String title, Locale locale) {
         title = this.removePunctations(title);
         Set<String> set = new HashSet<>();
         Collections.addAll(set, title.toLowerCase().split(" "));
-        removeStopWords(set);
+        removeStopWords(set, locale);
         return set;
     }
 
@@ -64,13 +79,13 @@ public class TextParser {
         return text.replaceAll(REGEX_PUNCTUATION, "");
     }
 
-    private void removeStopWords(Map<String, Integer> words) {
-        for (String s : this.config.getStopwords(this.locale))
+    private void removeStopWords(Map<String, Integer> words, Locale locale) {
+        for (String s : this.config.getStopwords(locale))
             words.remove(s.toLowerCase());
     }
 
-    public void removeStopWords(Collection<String> words) {
-        for (String s : this.config.getStopwords(this.locale))
+    public void removeStopWords(Collection<String> words, Locale locale) {
+        for (String s : this.config.getStopwords(locale))
             words.remove(s.toLowerCase());
     }
 

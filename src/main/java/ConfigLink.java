@@ -40,6 +40,10 @@ public class ConfigLink {
         return false;
     }
 
+    public Set<Locale> getSupportedLanguages() {
+        return this.stopwords.keySet();
+    }
+
     public Set<String> getStopwords(Locale locale) {
         if (locale == null)
             throw new IllegalArgumentException("Locale may not be null");
