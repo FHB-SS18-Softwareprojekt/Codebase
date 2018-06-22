@@ -21,6 +21,7 @@ import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 /**
@@ -77,8 +78,8 @@ public class SummarizerGUIController {
 	    private  void importText(ActionEvent event) {
 	    	FileChooser fc= new FileChooser();
 	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF","*.pdf" ));
-	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("DOCX","*.docx" ));
 	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("DOC","*.doc" ));
+	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("DOCX","*.docx" ));
 	    	fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT","*.txt" ));
 	    	File f =fc.showOpenDialog(null);
 	    	if (f!=null)
@@ -88,7 +89,7 @@ public class SummarizerGUIController {
 	    @FXML
 	    private void sendText(ActionEvent event) {
 	    	shortTextArea.setText(getText(longTextArea.getText()));
-	    }
+	    	    }
 
 
 	    @FXML
@@ -104,7 +105,8 @@ public class SummarizerGUIController {
 
 	    }
 	    private String getText(String s){
-	    	return s+"yay";
+	    	String t= "Test123";
+	    	return t;
 	    }
 
 	}
