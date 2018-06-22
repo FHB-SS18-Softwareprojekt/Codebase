@@ -3,6 +3,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 /**
  *
@@ -21,6 +22,7 @@ public class MainController extends Application {
         try {
         	Scene scene = new Scene (loader.load());
         	primaryStage.setTitle("!bigText");
+        	primaryStage.getIcons().add(new Image("file:resources/Logo.png"));
         	primaryStage.setMinHeight(550);
         	primaryStage.setMinWidth(640);
 			primaryStage.setScene(scene);
