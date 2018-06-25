@@ -15,7 +15,7 @@ public class TextParser {
         this.config = _config;
     }
 
-    public Locale identifyLangauge(String text) {
+    public Locale identifyLanguage(String text) {
         Map<String, Integer> words = splitAndCountWords(text);
         int identifiedCount = 0;
         Locale identifiedLanguage = null;
