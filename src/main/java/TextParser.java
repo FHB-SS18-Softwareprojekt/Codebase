@@ -22,7 +22,8 @@ public class TextParser {
         for (Locale locale : this.config.getSupportedLanguages()) {
             int count = 0;
             for (String word : this.config.getStopwords(locale)) {
-                count += words.get(word);
+                if (words.containsKey(word))
+                    count += words.get(word);
             }
             if (count > identifiedCount) {
                 identifiedCount = count;
