@@ -24,7 +24,7 @@ class TextParser_Test {
     @BeforeAll
     static void initAll() {
         ConfigLink configLink = new ConfigLink(new File("./src/test/resources/config"));
-        textParser = new TextParser(Locale.ENGLISH, configLink);
+        textParser = new TextParser(configLink);
 
         keywordsText = "This Text is a text; and it contains something that is text";
         keywordsMap = new HashMap<>();
