@@ -11,7 +11,7 @@ public class Summarizer {
     }
 
     public List<Sentence> summarize(String text, String title, float amount) {
-        Locale locale = this.parser.identifyLangauge(text);
+        Locale locale = this.parser.identifyLanguage(text);
         Map<String, Integer> keywords = this.parser.getKeywords(text, locale);
         Set<String> titleWords = null;
         if (title != null) {
@@ -113,7 +113,7 @@ public class Summarizer {
 
     public static void main(String[] args) {
         ConfigLink config = new ConfigLink(new File("./src/main/resources/config"));
-        TextParser textParser = new TextParser(Locale.ENGLISH, config);
+        TextParser textParser = new TextParser(config);
         Summarizer summarizer = new Summarizer(textParser);
 
         Scanner scanner = new Scanner(System.in);
