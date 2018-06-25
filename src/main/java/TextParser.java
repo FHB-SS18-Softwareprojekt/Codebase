@@ -11,7 +11,7 @@ public class TextParser {
     private static final Logger log = Logger.getLogger(TextParser.class.getName());
     private final ConfigLink config;
 
-    public TextParser(Locale _locale, ConfigLink _config) {
+    public TextParser(ConfigLink _config) {
         this.config = _config;
     }
 
