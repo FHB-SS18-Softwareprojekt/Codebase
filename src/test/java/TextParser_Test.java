@@ -59,7 +59,7 @@ class TextParser_Test {
 
     @Test
     void test_getKeywords() {
-        Map<String, Integer> keywords = textParser.getKeywords(keywordsText);
+        Map<String, Integer> keywords = textParser.getKeywords(keywordsText, Locale.ENGLISH);
         for (String k : keywords.keySet())
             assertEquals((int) keywords.get(k), (int) keywordsMap.get(k));
     }
@@ -82,12 +82,12 @@ class TextParser_Test {
 
     @Test
     void test_splitTitle() {
-        assertIterableEquals(textParser.splitTitle(titleText), titleSet);
+        assertIterableEquals(textParser.splitTitle(titleText, Locale.ENGLISH), titleSet);
     }
 
     @Test
     void test_removeStopWords() {
-        textParser.removeStopWords(stopwords);
+        textParser.removeStopWords(stopwords, Locale.ENGLISH);
         assertIterableEquals(stopwords, stopwordsFiltered);
     }
 
