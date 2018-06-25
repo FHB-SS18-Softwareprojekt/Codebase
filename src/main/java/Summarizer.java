@@ -11,10 +11,11 @@ public class Summarizer {
     }
 
     public List<Sentence> summarize(String text, String title, float amount) {
-        Map<String, Integer> keywords = this.parser.getKeywords(text);
+        Locale locale = this.parser.identifyLangauge(text);
+        Map<String, Integer> keywords = this.parser.getKeywords(text, locale);
         Set<String> titleWords = null;
         if (title != null) {
-            titleWords = this.parser.splitTitle(title);
+            titleWords = this.parser.splitTitle(title, locale);
         }
         List<Sentence> sentences = this.parser.getSentences(text);
 
