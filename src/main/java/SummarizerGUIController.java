@@ -114,10 +114,5 @@ public class SummarizerGUIController {
 
     }
 
-    private String getText(String s) {
-        String t = "Test123";
-        return t;
-    }
-
 }
 
