@@ -9,6 +9,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Actionevents der SummerizerGUI
@@ -41,6 +44,15 @@ public class SummarizerGUIController {
     @FXML
     private TextArea shortTextArea;
 
+    private final TextParser textParser;
+    private final Summarizer summarizer;
+
+    public SummarizerGUIController() {
+        ConfigLink config = new ConfigLink(new File(getClass().getResource("../resources/config").getFile()));
+        this.textParser = new TextParser(config);
+        this.summarizer = new Summarizer(textParser);
+    }
+
     @FXML
     private void changeSliderText(MouseEvent event) {
         sliderText.setText(getSliderValue() + "%");
@@ -56,8 +68,9 @@ public class SummarizerGUIController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
         File f = fc.showSaveDialog(null);
-        if (f != null)
-            shortTextArea.setText(f.getPath());
+        if (f != null) {
+            //TODO: Export
+        }
     }
 
     @FXML
@@ -69,12 +82,22 @@ public class SummarizerGUIController {
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
         File f = fc.showOpenDialog(null);
         if (f != null)
-            shortTextArea.setText(f.getPath());
+            try {
+                String[] text = this.textParser.getTextFromPath(f.getPath());
+                String textFormatted = text[0] + "\n" + text[1];
+                this.longTextArea.setText(textFormatted);
+            } catch (IOException e) {
+                //TODO: Popup mit Fehler-Information, @amatutat
+            }
     }
 
     @FXML
     private void sendText(ActionEvent event) {
-        shortTextArea.setText(getText(longTextArea.getText()));
+        String[] split = longTextArea.getText().split("\n", 1);
+        float amount = (100 - getSliderValue()) / 100f;
+        List<Sentence> summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
+        String text = summarized.stream().map(Sentence::getText).collect(Collectors.joining("\n -","- ",""));
+        shortTextArea.setText(text);
     }
 
 
