@@ -87,7 +87,7 @@ public class SummarizerGUIController {
                 String textFormatted = text[0] + "\n" + text[1];
                 this.longTextArea.setText(textFormatted);
             } catch (IOException e) {
-                //TODO: Popup mit Fehler-Information, @amatutat
+            	showError(e.getMessage());
             }
     }
 
