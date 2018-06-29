@@ -114,5 +114,19 @@ public class SummarizerGUIController {
 
     }
 
+    @FXML
+    private void showError(String errMsg){
+    	  Label secondLabel = new Label(errMsg);
+          StackPane secondaryLayout = new StackPane();
+          secondaryLayout.getChildren().add(secondLabel);
+          Scene secondScene = new Scene(secondaryLayout, 230, 100);
+          Stage newWindow = new Stage();
+          newWindow.setTitle("FEHLER");
+          newWindow.setScene(secondScene);
+          newWindow.show();
+
+    }
+
+
 }
 
