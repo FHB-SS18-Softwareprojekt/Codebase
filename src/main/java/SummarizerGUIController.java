@@ -87,7 +87,7 @@ public class SummarizerGUIController {
                 String textFormatted = text[0] + "\n" + text[1];
                 this.longTextArea.setText(textFormatted);
             } catch (IOException e) {
-                //TODO: Popup mit Fehler-Information, @amatutat
+            	showError("Fehler beim Importieren: "+e.getMessage());
             }
     }
 
@@ -113,6 +113,20 @@ public class SummarizerGUIController {
         newWindow.show();
 
     }
+
+    @FXML
+    private void showError(String errMsg){
+    	  Label secondLabel = new Label(errMsg);
+          StackPane secondaryLayout = new StackPane();
+          secondaryLayout.getChildren().add(secondLabel);
+          Scene secondScene = new Scene(secondaryLayout, 230, 100);
+          Stage newWindow = new Stage();
+          newWindow.setTitle("FEHLER");
+          newWindow.setScene(secondScene);
+          newWindow.show();
+
+    }
+
 
 }
 

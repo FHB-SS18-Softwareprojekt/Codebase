@@ -37,14 +37,14 @@
                   <Text fx:id="sliderText" strokeType="OUTSIDE" strokeWidth="0.0" text="30%" wrappingWidth="29.0" BorderPane.alignment="CENTER" />
                </right>
                <top>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kürzen um" wrappingWidth="56.830078125" BorderPane.alignment="CENTER" />
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kürzen um" wrappingWidth="86" BorderPane.alignment="CENTER" />
                </top>
             </BorderPane>
          </right>
          <left>
             <BorderPane prefHeight="78.0" prefWidth="64.0" BorderPane.alignment="CENTER">
                <center>
-                  <Button fx:id="okButton" mnemonicParsing="false" onAction="#sendText" prefHeight="25.0" prefWidth="53.0" text="Kürzen" BorderPane.alignment="CENTER" />
+                  <Button fx:id="okButton" mnemonicParsing="false" onAction="#sendText" prefHeight="25.0" prefWidth="83.0" text="Kürzen" BorderPane.alignment="CENTER" />
                </center>
             </BorderPane>
          </left>
