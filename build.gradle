@@ -19,7 +19,7 @@ repositories {
 apply plugin: 'javafx-gradle-plugin'
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.4'
+    compile 'com.google.code.gson:gson:2.8.4'
     compile group: 'org.apache.poi', name: 'poi', version: '3.17'
     compile group: 'org.apache.poi', name: 'poi-scratchpad', version: '3.17'
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
@@ -37,6 +37,10 @@ dependencies {
 jfx {
     mainClass = 'MainController'
     vendor = '!bigText'
+    jfxMainAppJarName = "bigText-jfx.jar"
+    appName = "bigText"
+    nativeReleaseVersion = "0.9"
+    additionalAppResources = 'src/main/deploy/additional_resources'
 }
 
 test {
