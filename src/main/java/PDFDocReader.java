@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
@@ -39,8 +40,7 @@ public class PDFDocReader implements IDocumentReader {
         document = new PDDocument();
         int line=1;
 
-        File font;
-        font=new File("./src/main/resources/arial.ttf");
+        InputStream font = getClass().getResourceAsStream("arial.ttf");
 
         PDPage page1 = new PDPage();
         document.addPage(page1);

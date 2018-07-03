@@ -46,6 +46,7 @@ public class SummarizerGUIController {
 
     private final TextParser textParser;
     private final Summarizer summarizer;
+    private List<Sentence> sentenceList;
 
     public SummarizerGUIController() {
         ConfigLink config = new ConfigLink(new File("config"));
@@ -68,8 +69,13 @@ public class SummarizerGUIController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
         File f = fc.showSaveDialog(null);
-        if (f != null) {
-            //TODO: Export
+        if (f != null && sentenceList != null) {
+            try {
+                PDFDocReader pdfDocReader = new PDFDocReader();
+                pdfDocReader.savePDF(sentenceList, f);
+            } catch (IOException e) {
+                showError("Fehler beim Exportieren: " + e.getMessage());
+            }
         }
     }
 
@@ -95,8 +101,8 @@ public class SummarizerGUIController {
     private void sendText(ActionEvent event) {
         String[] split = longTextArea.getText().split("\n", 1);
         float amount = (100 - getSliderValue()) / 100f;
-        List<Sentence> summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
-        String text = summarized.stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
+        this.sentenceList = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
+        String text = this.sentenceList.stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
         shortTextArea.setText(text);
     }
 
