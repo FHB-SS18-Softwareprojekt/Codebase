@@ -19,8 +19,12 @@ public class ConfigLink {
         this.gson = new Gson();
         this.stopwords = new HashMap<>();
 
-        for (File file : configFolder.listFiles())
-            readConfig(file);
+        try {
+            for (File file : configFolder.listFiles())
+                readConfig(file);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean readConfig(File file) {

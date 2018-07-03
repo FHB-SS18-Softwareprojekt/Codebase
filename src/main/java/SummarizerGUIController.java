@@ -48,7 +48,7 @@ public class SummarizerGUIController {
     private final Summarizer summarizer;
 
     public SummarizerGUIController() {
-        ConfigLink config = new ConfigLink(new File(getClass().getResource("../resources/config").getFile()));
+        ConfigLink config = new ConfigLink(new File("config"));
         this.textParser = new TextParser(config);
         this.summarizer = new Summarizer(textParser);
     }
@@ -87,7 +87,7 @@ public class SummarizerGUIController {
                 String textFormatted = text[0] + "\n" + text[1];
                 this.longTextArea.setText(textFormatted);
             } catch (IOException e) {
-            	showError("Fehler beim Importieren: "+e.getMessage());
+                showError("Fehler beim Importieren: " + e.getMessage());
             }
     }
 
@@ -96,7 +96,7 @@ public class SummarizerGUIController {
         String[] split = longTextArea.getText().split("\n", 1);
         float amount = (100 - getSliderValue()) / 100f;
         List<Sentence> summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
-        String text = summarized.stream().map(Sentence::getText).collect(Collectors.joining("\n -","- ",""));
+        String text = summarized.stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
         shortTextArea.setText(text);
     }
 
@@ -115,15 +115,15 @@ public class SummarizerGUIController {
     }
 
     @FXML
-    private void showError(String errMsg){
-    	  Label secondLabel = new Label(errMsg);
-          StackPane secondaryLayout = new StackPane();
-          secondaryLayout.getChildren().add(secondLabel);
-          Scene secondScene = new Scene(secondaryLayout, 230, 100);
-          Stage newWindow = new Stage();
-          newWindow.setTitle("FEHLER");
-          newWindow.setScene(secondScene);
-          newWindow.show();
+    private void showError(String errMsg) {
+        Label secondLabel = new Label(errMsg);
+        StackPane secondaryLayout = new StackPane();
+        secondaryLayout.getChildren().add(secondLabel);
+        Scene secondScene = new Scene(secondaryLayout, 230, 100);
+        Stage newWindow = new Stage();
+        newWindow.setTitle("FEHLER");
+        newWindow.setScene(secondScene);
+        newWindow.show();
 
     }
 

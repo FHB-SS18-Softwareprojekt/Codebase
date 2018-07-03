@@ -18,11 +18,11 @@ public class MainController extends Application {
     @Override
     public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../resources/summarizerMain.fxml"));
+        loader.setLocation(getClass().getResource("summarizerMain.fxml"));
         try {
             Scene scene = new Scene(loader.load());
             primaryStage.setTitle("!bigText");
-            primaryStage.getIcons().add(new Image("file:resources/Logo.png"));
+            primaryStage.getIcons().add(new Image("file:Logo.png"));
             primaryStage.setMinHeight(550);
             primaryStage.setMinWidth(640);
             primaryStage.setScene(scene);
