@@ -110,36 +110,4 @@ public class Summarizer {
         summarized.sort(Comparator.comparingInt(Sentence::getPosition));
         return summarized;
     }
-
-    public static void main(String[] args) {
-        ConfigLink config = new ConfigLink(new File("./src/main/resources/config"));
-        TextParser textParser = new TextParser(config);
-        Summarizer summarizer = new Summarizer(textParser);
-
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Pfad zu Datei eingeben:");
-        String path = scanner.nextLine();
-        if (path.isEmpty())
-            System.out.println("Pfad unzulässig");
-
-        File file = new File(path);
-
-        if (file.exists() && file.isFile()) {
-            System.out.println("Zusammenfassungs-Größe angeben (Wert zwischen 30 und 80)");
-            int quota = scanner.nextInt();
-
-            System.out.println(quota + "% Zusammenfassung:");
-
-            List<Sentence> summarized = null;
-            try {
-                summarized = summarizer.summarizeFromPath(file.getPath(), quota);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            for (Sentence sentence : summarized)
-                System.out.println(" - " + sentence.getText());
-        }
-    }
 }
