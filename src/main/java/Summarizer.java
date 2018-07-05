@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -10,14 +9,19 @@ public class Summarizer {
         this.parser = parser;
     }
 
-    public List<Sentence> summarize(String text, String title, float amount) {
+    public SummaryResult summarize(String text, String title, float amount) {
         Locale locale = this.parser.identifyLanguage(text);
+        if (locale == null)
+            return SummaryResult.fail("Die Sprache des Textes wurde nicht erkannt.");
+
         Map<String, Integer> keywords = this.parser.getKeywords(text, locale);
         Set<String> titleWords = null;
         if (title != null) {
             titleWords = this.parser.splitTitle(title, locale);
         }
         List<Sentence> sentences = this.parser.getSentences(text);
+        if (sentences.isEmpty())
+            return SummaryResult.fail("Text kann nicht weiter zusammengefasst werden.");
 
         computeSentenceScores(sentences, keywords, titleWords);
 
@@ -28,7 +32,7 @@ public class Summarizer {
 
         sortedSentences = sortedSentences.subList(0, sentenceCount);
         sortedSentences.sort(Comparator.comparingInt(Sentence::getPosition));
-        return sortedSentences;
+        return SummaryResult.success(sortedSentences);
     }
 
     private final static float PRIO_KEYWORD = 2.0f;
@@ -99,15 +103,5 @@ public class Summarizer {
             return 0.04f;
         else
             return 0.15f;
-    }
-
-    public List<Sentence> summarizeFromPath(String path, float quota) throws IOException {
-
-        float f_quota = quota / 100f;
-        String[] parsed = parser.getTextFromPath(path);
-        //TODO parsed kann beim Einlesen von PDF offenbar leer sein, überprüfen
-        List<Sentence> summarized = summarize(parsed[1], parsed[0], f_quota);
-        summarized.sort(Comparator.comparingInt(Sentence::getPosition));
-        return summarized;
     }
 }

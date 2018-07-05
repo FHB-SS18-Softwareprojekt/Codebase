@@ -95,9 +95,13 @@ public class SummarizerGUIController {
     private void sendText(ActionEvent event) {
         String[] split = longTextArea.getText().split("\n", 1);
         float amount = (100 - getSliderValue()) / 100f;
-        List<Sentence> summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
-        String text = summarized.stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
-        shortTextArea.setText(text);
+        SummaryResult summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
+        if (!summarized.wasSuccessful())
+            this.showError(summarized.getErrorMessage());
+        else {
+            String text = summarized.getSentenceList().stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
+            shortTextArea.setText(text);
+        }
     }
 
 
@@ -116,15 +120,16 @@ public class SummarizerGUIController {
 
     @FXML
     private void showError(String errMsg) {
-        Label secondLabel = new Label(errMsg);
+        TextArea secondLabel = new TextArea(errMsg);
+        secondLabel.setWrapText(true);
+        secondLabel.setEditable(false);
         StackPane secondaryLayout = new StackPane();
         secondaryLayout.getChildren().add(secondLabel);
         Scene secondScene = new Scene(secondaryLayout, 230, 100);
         Stage newWindow = new Stage();
-        newWindow.setTitle("FEHLER");
+        newWindow.setTitle("Fehler");
         newWindow.setScene(secondScene);
         newWindow.show();
-
     }
 
 
