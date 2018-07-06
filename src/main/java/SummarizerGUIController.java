@@ -107,7 +107,7 @@ public class SummarizerGUIController {
 
     @FXML
     private void showHelp(ActionEvent event) {
-       TextArea secondLabel = new TextArea("1.Datei importieren (Datei->Importieren), oder per Copy&Paste in das obere Feld einfügen. \n 2. Kürzen um einstellen (Slider) \n 3. Den gekürzten Text anzeigen lassen (Kürzen Button) \n 4. Den gekürzten Text als PDF exportieren (Datei->Speichern unter)";
+       TextArea secondLabel = new TextArea("1.Datei importieren (Datei->Importieren), oder per Copy&Paste in das obere Feld einfügen. \n 2. Kürzen um einstellen (Slider) \n 3. Den gekürzten Text anzeigen lassen (Kürzen Button) \n 4. Den gekürzten Text als PDF exportieren (Datei->Speichern unter)");
         secondLabel.setWrapText(true);
         secondLabel.setEditable(false);
         StackPane secondaryLayout = new StackPane();
