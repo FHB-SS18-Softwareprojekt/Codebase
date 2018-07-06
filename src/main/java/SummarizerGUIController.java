@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +45,7 @@ public class SummarizerGUIController {
 
     private final TextParser textParser;
     private final Summarizer summarizer;
-    private List<Sentence> sentenceList;
+    private SummaryResult summaryResult;
 
     public SummarizerGUIController() {
         ConfigLink config = new ConfigLink(new File("config"));
@@ -69,10 +68,10 @@ public class SummarizerGUIController {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
         File f = fc.showSaveDialog(null);
-        if (f != null && sentenceList != null) {
+        if (f != null && summaryResult != null) {
             try {
                 PDFDocReader pdfDocReader = new PDFDocReader();
-                pdfDocReader.savePDF(sentenceList, f);
+                pdfDocReader.savePDF(summaryResult.getSentenceList(), f);
             } catch (IOException e) {
                 showError("Fehler beim Exportieren: " + e.getMessage());
             }
@@ -101,9 +100,13 @@ public class SummarizerGUIController {
     private void sendText(ActionEvent event) {
         String[] split = longTextArea.getText().split("\n", 1);
         float amount = (100 - getSliderValue()) / 100f;
-        this.sentenceList = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
-        String text = this.sentenceList.stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
-        shortTextArea.setText(text);
+        SummaryResult summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
+        if (!summarized.wasSuccessful())
+            this.showError(summarized.getErrorMessage());
+        else {
+            String text = summarized.getSentenceList().stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
+            shortTextArea.setText(text);
+        }
     }
 
 
@@ -122,15 +125,16 @@ public class SummarizerGUIController {
 
     @FXML
     private void showError(String errMsg) {
-        Label secondLabel = new Label(errMsg);
+        TextArea secondLabel = new TextArea(errMsg);
+        secondLabel.setWrapText(true);
+        secondLabel.setEditable(false);
         StackPane secondaryLayout = new StackPane();
         secondaryLayout.getChildren().add(secondLabel);
         Scene secondScene = new Scene(secondaryLayout, 230, 100);
         Stage newWindow = new Stage();
-        newWindow.setTitle("FEHLER");
+        newWindow.setTitle("Fehler");
         newWindow.setScene(secondScene);
         newWindow.show();
-
     }
 
 
