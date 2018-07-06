@@ -1,16 +1,23 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -107,15 +114,19 @@ public class SummarizerGUIController {
 
     @FXML
     private void showHelp(ActionEvent event) {
-        Label secondLabel = new Label("Hier steht eine tolle Anleitung");
+        TextArea secondLabel = new TextArea("1.Datei importieren (Datei->Importieren), oder per Copy&Paste in das obere Feld einfügen. \n 2. Kürzen um einstellen (Slider) \n 3. Den gekürzten Text anzeigen lassen (Kürzen Button) \n 4. Den gekürzten Text als PDF exportieren (Datei->Speichern unter)");
+        secondLabel.setWrapText(true);
+        secondLabel.setEditable(false);
         StackPane secondaryLayout = new StackPane();
         secondaryLayout.getChildren().add(secondLabel);
         Scene secondScene = new Scene(secondaryLayout, 230, 100);
         Stage newWindow = new Stage();
+        newWindow.setAlwaysOnTop(true);
+        newWindow.setWidth(300);
+        newWindow.setHeight(200);
         newWindow.setTitle("Hilfe");
         newWindow.setScene(secondScene);
         newWindow.show();
-
     }
 
     @FXML
@@ -127,6 +138,9 @@ public class SummarizerGUIController {
         secondaryLayout.getChildren().add(secondLabel);
         Scene secondScene = new Scene(secondaryLayout, 230, 100);
         Stage newWindow = new Stage();
+        newWindow.setAlwaysOnTop(true);
+        newWindow.setWidth(300);
+        newWindow.setHeight(200);
         newWindow.setTitle("Fehler");
         newWindow.setScene(secondScene);
         newWindow.show();
