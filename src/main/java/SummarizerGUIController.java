@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Actionevents der SummerizerGUI
@@ -71,7 +72,8 @@ public class SummarizerGUIController {
         if (f != null && summaryResult != null) {
             try {
                 PDFDocReader pdfDocReader = new PDFDocReader();
-                pdfDocReader.savePDF(summaryResult.getSentenceList(), f);
+                Stream<String> sentences = summaryResult.getSentenceList().stream().map(sentence -> "- "+sentence.getText());
+                pdfDocReader.savePDF(sentences, f);
             } catch (IOException e) {
                 showError("Fehler beim Exportieren: " + e.getMessage());
             }
@@ -100,11 +102,11 @@ public class SummarizerGUIController {
     private void sendText(ActionEvent event) {
         String[] split = longTextArea.getText().split("\n", 1);
         float amount = (100 - getSliderValue()) / 100f;
-        SummaryResult summarized = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
-        if (!summarized.wasSuccessful())
-            this.showError(summarized.getErrorMessage());
+        this.summaryResult = split.length > 1 ? this.summarizer.summarize(split[1], split[0], amount) : this.summarizer.summarize(split[0], "", amount);
+        if (!summaryResult.wasSuccessful())
+            this.showError(summaryResult.getErrorMessage());
         else {
-            String text = summarized.getSentenceList().stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
+            String text = summaryResult.getSentenceList().stream().map(Sentence::getText).collect(Collectors.joining("\n -", "- ", ""));
             shortTextArea.setText(text);
         }
     }

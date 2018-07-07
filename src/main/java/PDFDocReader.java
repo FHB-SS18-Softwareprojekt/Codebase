@@ -1,15 +1,15 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.stream.Stream;
 
 
 public class PDFDocReader implements IDocumentReader {
@@ -35,10 +35,10 @@ public class PDFDocReader implements IDocumentReader {
 
     }
 
-    public void savePDF(List<Sentence> list, File file)throws IOException{
-        String path=file.getPath();
+    public void savePDF(Stream<String> sentences, File file) throws IOException {
+        String path = file.getPath();
         document = new PDDocument();
-        int line=1;
+        int line = 1;
 
         InputStream font = getClass().getResourceAsStream("arial.ttf");
 
@@ -50,9 +50,10 @@ public class PDFDocReader implements IDocumentReader {
         contentStream.setFont(PDType0Font.load(document, font), 12);
         contentStream.newLineAtOffset(25, 750);
         contentStream.setLeading(14.5f);
-        for (Sentence s : list){
-            int start=0;
-            String text=s.getText();
+        Iterator<String> iterator = sentences.iterator();
+        while (iterator.hasNext()) {
+            int start = 0;
+            String text = iterator.next();
             for (int i = 85; i < text.length(); i = i + 85) {
                 if (line > 50) {
                     line = 0;
@@ -68,9 +69,9 @@ public class PDFDocReader implements IDocumentReader {
                     contentStream.setLeading(14.5f);
                 }
                 contentStream.showText(text.substring(start, i));
-                if(!text.substring(i-1,i).equals(" ")){
-                    while(!text.substring(i-1,i).equals(" ")&&!text.substring(i-1,i).equals(".")){
-                        contentStream.showText(text.substring(i, i+1));
+                if (!text.substring(i - 1, i).equals(" ")) {
+                    while (!text.substring(i - 1, i).equals(" ") && !text.substring(i - 1, i).equals(".")) {
+                        contentStream.showText(text.substring(i, i + 1));
                         i++;
                         start++;
                     }
