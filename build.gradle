@@ -39,7 +39,7 @@ jfx {
     vendor = '!bigText'
     jfxMainAppJarName = "bigText-jfx.jar"
     appName = "bigText"
-    nativeReleaseVersion = "0.9"
+    nativeReleaseVersion = "1.0"
     additionalAppResources = 'src/main/deploy/additional_resources'
 }
 
