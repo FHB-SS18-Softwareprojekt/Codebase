@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'java'
+apply plugin: 'org.junit.platform.gradle.plugin'
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'javafx-gradle-plugin'
+
+dependencies {
+    compile 'com.google.code.gson:gson:2.8.4'
+    compile group: 'org.apache.poi', name: 'poi', version: '3.17'
+    compile group: 'org.apache.poi', name: 'poi-scratchpad', version: '3.17'
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+    compile group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.9'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+
+    testImplementation(
+            'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    )
+    testRuntimeOnly(
+            'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    )
+}
+
+jfx {
+    mainClass = 'MainController'
+    vendor = '!bigText'
+    jfxMainAppJarName = "bigText-jfx.jar"
+    appName = "bigText"
+    nativeReleaseVersion = "1.0"
+    additionalAppResources = 'src/main/deploy/additional_resources'
+}
+
+test {
+    useJUnitPlatform()
+}
